@@ -1,94 +1,162 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Snake Game with a Twist</title>
-  <style>
-    body {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      margin: 0;
-      background: linear-gradient(135deg, #ffc0cb, #87ceeb);
-      color: #333;
-      font-family: Arial, sans-serif;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Snake Game with a Twist</title>
 
-    canvas {
-      background: rgba(255,255,255,0.7);
-      border: 3px solid #fff;
-      border-radius: 10px;
-      display: none;
-    }
+<style>
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  margin: 0;
+  background: linear-gradient(135deg, #ffc0cb, #87ceeb);
+  color: #333;
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  box-sizing: border-box;
+}
 
-    #startScreen {
-      text-align: center;
-    }
+canvas {
+  background: rgba(255,255,255,0.7);
+  border: 3px solid #fff;
+  border-radius: 10px;
+  display: none;
+  width: 90vw;
+  max-width: 400px;
+  aspect-ratio: 1/1;
+  height: auto;
+}
 
-    #startBtn {
-      padding: 12px 25px;
-      border: none;
-      border-radius: 20px;
-      font-size: 18px;
-      background: #ffb6c1;
-      cursor: pointer;
-    }
+#startScreen {
+  text-align: center;
+}
 
-    #messageBox {
-      position: absolute;
-      background: white;
-      padding: 30px;
-      border-radius: 15px;
-      text-align: left;
-      display: none;
-      box-shadow: 0 0 20px rgba(0,0,0,0.2);
-      max-width: 700px;
-      max-height: 80vh;
-      overflow-y: auto;
-      font-family: Garamond, "Times New Roman", serif;
-      line-height: 1.8;
-      white-space: pre-wrap;
-    }
+#startBtn {
+  padding: 12px 25px;
+  border: none;
+  border-radius: 20px;
+  font-size: 18px;
+  background: #ffb6c1;
+  cursor: pointer;
+}
 
-    button {
-      margin: 10px;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 20px;
-      cursor: pointer;
-      font-size: 16px;
-    }
+#messageBox {
+  position: fixed;
+  background: white;
+  padding: 25px;
+  border-radius: 15px;
+  text-align: left;
+  display: none;
+  box-shadow: 0 0 20px rgba(0,0,0,0.2);
+  width: 85%;
+  max-width: 700px;
+  max-height: 80vh;
+  overflow-y: auto;
+  font-family: Garamond, "Times New Roman", serif;
+  line-height: 1.8;
+  white-space: pre-wrap;
+  z-index: 100;
+}
 
-    #yesBtn { background: #ffb6c1; }
-    #noBtn { background: #87cefa; }
-    #restartBtn { background: #fff; border: 2px solid #ccc; display:none; }
+button {
+  margin: 10px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 16px;
+}
 
-    #controls {
-      margin-top: 15px;
-      display: none;
-      grid-template-columns: repeat(3, 70px);
-      grid-template-rows: repeat(3, 70px);
-      gap: 8px;
-      justify-content: center;
-      align-items: center;
-    }
+#yesBtn {
+  background: #ffb6c1;
+}
 
-    .ctrl {
-      background: white;
-      border-radius: 12px;
-      font-size: 22px;
-      user-select: none;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-    }
-  </style>
+#noBtn {
+  background: #87cefa;
+}
+
+#restartBtn {
+  background: #fff;
+  border: 2px solid #ccc;
+  display: none;
+}
+
+#controls {
+  margin-top: 20px;
+  display: none;
+  width: 210px;
+  height: 210px;
+  position: relative;
+}
+
+.ctrl {
+  position: absolute;
+  width: 70px;
+  height: 70px;
+  background: white;
+  border: 5px solid black;
+  border-radius: 15px;
+  font-size: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+}
+
+.up {
+  top: 0;
+  left: 70px;
+}
+
+.left {
+  top: 70px;
+  left: 0;
+}
+
+.right {
+  top: 70px;
+  right: 0;
+}
+
+.down {
+  bottom: 0;
+  left: 70px;
+}
+
+@media (max-width: 500px) {
+  #controls {
+    width: 180px;
+    height: 180px;
+  }
+
+  .ctrl {
+    width: 60px;
+    height: 60px;
+    font-size: 28px;
+  }
+
+  .up {
+    left: 60px;
+  }
+
+  .left {
+    top: 60px;
+  }
+
+  .right {
+    top: 60px;
+  }
+
+  .down {
+    left: 60px;
+  }
+}
+</style>
 </head>
 <body>
 
@@ -98,7 +166,11 @@
 </div>
 
 <canvas id="game" width="400" height="400"></canvas>
-<p id="scoreText" style="display:none;">Score: <span id="score">0</span></p>
+
+<p id="scoreText" style="display:none;">
+  Score: <span id="score">0</span>
+</p>
+
 <button id="restartBtn">Restart</button>
 
 <div id="messageBox">
@@ -109,34 +181,28 @@ I do not know how to start this letter or what exactly to say, but here I go.
 
 What I felt for you started as a silly little crush, something I never planned on telling anyone. I did not even notice it growing at first. The more we interacted, the more something in me slowly changed.
 I never expected it to lead to this. I never expected to find love when I least expected it.
-I realized it was no longer just admiration when your name started lighting something inside me. When I could not bring myself to look into your eyes the same way I look at our friends. When I caught myself hiding a smile every time I saw you, or every time our friends mentioned you.
-Abi ko crush lang, pero may crush nga nagseselos? HAHAHAHAHA. I was so confused back then because I knew it was just rage bait, but there was still this feeling in me na gusto siya sumbagon, char. Basta, I hated seeing someone else have your attention when all I wanted was to be the one beside you.
-I knew it was not just a crush anymore when, despite seeing how strong you are, all I wanted was to hold you in the gentlest way possible. When I started including you in my prayers. When I asked God to protect you, to keep you safe, and to give me the chance to be with you.
-Every time you talked about how badly he treated you, I kept thinking that if it were me, I would love you better. I would choose you consistently, every single day.
-I cannot even bring myself to look at other girls anymore or take interest in them. My mind always drifts back to you, to how badly I want to be with you all the time.
-Maybe I fell too fast, but I do not care, as long as I know that what I feel for you is real. I am completely sure about loving you for the rest of my life.
-And if what we have, and what we did, is considered a sin, then I would still walk through fire knowing that, at least once in this life, I got the chance to be loved by you.
 
-You saved me from giving up with myself. I love you, the best plot twist that has ever happened in my life. So, will you spend this lifetime with me?
+You saved me from giving up on myself. I love you, the best plot twist that has ever happened in my life.
+
+So, will you spend this lifetime with me?
 </p>
-  <button id="yesBtn">yes</button>
-  <button id="noBtn">no</button>
+
+<button id="yesBtn">yes</button>
+<button id="noBtn">no</button>
 </div>
 
 <div id="controls">
-  <div></div>
-  <div class="ctrl" onclick="setDir('UP')">⬆️</div>
-  <div></div>
-  <div class="ctrl" onclick="setDir('LEFT')">⬅️</div>
-  <div class="ctrl" onclick="setDir('DOWN')">⬇️</div>
-  <div class="ctrl" onclick="setDir('RIGHT')">➡️</div>
+  <div class="ctrl up" onclick="setDir('UP')">▲</div>
+  <div class="ctrl left" onclick="setDir('LEFT')">◀</div>
+  <div class="ctrl right" onclick="setDir('RIGHT')">▶</div>
+  <div class="ctrl down" onclick="setDir('DOWN')">▼</div>
 </div>
 
 <script>
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
-const box = 20;
 
+let box = 20;
 let snake, food, direction, score, game;
 let speed;
 let messageShown;
@@ -151,35 +217,48 @@ const startScreen = document.getElementById("startScreen");
 const controls = document.getElementById("controls");
 const scoreText = document.getElementById("scoreText");
 
-function randomFood(){
+function resizeCanvas() {
+  const size = Math.min(window.innerWidth * 0.9, 400);
+  canvas.width = size;
+  canvas.height = size;
+  box = size / 20;
+}
+
+window.addEventListener("resize", resizeCanvas);
+
+function randomFood() {
   return {
-    x: Math.floor(Math.random()*20)*box,
-    y: Math.floor(Math.random()*20)*box
+    x: Math.floor(Math.random() * 20) * box,
+    y: Math.floor(Math.random() * 20) * box
   };
 }
 
 window.addEventListener("keydown", (e) => {
   const key = e.key.toLowerCase();
 
-  if((key === "a" || e.key === "ArrowLeft") && direction !== "RIGHT") direction = "LEFT";
-  else if((key === "w" || e.key === "ArrowUp") && direction !== "DOWN") direction = "UP";
-  else if((key === "d" || e.key === "ArrowRight") && direction !== "LEFT") direction = "RIGHT";
-  else if((key === "s" || e.key === "ArrowDown") && direction !== "UP") direction = "DOWN";
+  if ((key === "a" || e.key === "ArrowLeft") && direction !== "RIGHT")
+    direction = "LEFT";
+  else if ((key === "w" || e.key === "ArrowUp") && direction !== "DOWN")
+    direction = "UP";
+  else if ((key === "d" || e.key === "ArrowRight") && direction !== "LEFT")
+    direction = "RIGHT";
+  else if ((key === "s" || e.key === "ArrowDown") && direction !== "UP")
+    direction = "DOWN";
 });
 
-function setDir(dir){
-  if(dir === "LEFT" && direction !== "RIGHT") direction = "LEFT";
-  if(dir === "RIGHT" && direction !== "LEFT") direction = "RIGHT";
-  if(dir === "UP" && direction !== "DOWN") direction = "UP";
-  if(dir === "DOWN" && direction !== "UP") direction = "DOWN";
+function setDir(dir) {
+  if (dir === "LEFT" && direction !== "RIGHT") direction = "LEFT";
+  if (dir === "RIGHT" && direction !== "LEFT") direction = "RIGHT";
+  if (dir === "UP" && direction !== "DOWN") direction = "UP";
+  if (dir === "DOWN" && direction !== "UP") direction = "DOWN";
 }
 
 function draw() {
   ctx.fillStyle = "#fff";
-  ctx.fillRect(0,0,400,400);
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  for(let i=0;i<snake.length;i++){
-    ctx.fillStyle = i===0 ? "#ff69b4" : "#87ceeb";
+  for (let i = 0; i < snake.length; i++) {
+    ctx.fillStyle = i === 0 ? "#ff69b4" : "#87ceeb";
     ctx.fillRect(snake[i].x, snake[i].y, box, box);
   }
 
@@ -189,22 +268,22 @@ function draw() {
   let headX = snake[0].x;
   let headY = snake[0].y;
 
-  if(direction === "LEFT") headX -= box;
-  if(direction === "RIGHT") headX += box;
-  if(direction === "UP") headY -= box;
-  if(direction === "DOWN") headY += box;
+  if (direction === "LEFT") headX -= box;
+  if (direction === "RIGHT") headX += box;
+  if (direction === "UP") headY -= box;
+  if (direction === "DOWN") headY += box;
 
-  if(headX === food.x && headY === food.y){
+  if (headX === food.x && headY === food.y) {
     score++;
     scoreDisplay.textContent = score;
     food = randomFood();
 
-    if(speed > 60){
+    if (speed > 60) {
       speed -= 5;
       restartInterval();
     }
 
-    if(score === 5 && !messageShown){
+    if (score === 5 && !messageShown) {
       clearInterval(game);
       messageBox.style.display = "block";
       messageShown = true;
@@ -213,36 +292,45 @@ function draw() {
     snake.pop();
   }
 
-  let newHead = {x: headX, y: headY};
+  const newHead = {
+    x: headX,
+    y: headY
+  };
 
-  if(headX < 0 || headY < 0 || headX >= 400 || headY >= 400 || collision(newHead, snake)){
+  if (
+    headX < 0 ||
+    headY < 0 ||
+    headX >= canvas.width ||
+    headY >= canvas.height ||
+    collision(newHead, snake)
+  ) {
     gameOver();
   }
 
   snake.unshift(newHead);
 }
 
-function restartInterval(){
+function restartInterval() {
   clearInterval(game);
   game = setInterval(draw, speed);
 }
 
-function collision(head, array){
-  return array.some(segment => segment.x === head.x && segment.y === head.y);
+function collision(head, array) {
+  return array.some(
+    segment => segment.x === head.x && segment.y === head.y
+  );
 }
 
-function gameOver(){
+function gameOver() {
   clearInterval(game);
   alert("Game Over");
 }
 
-// YES = continue
 yesBtn.onclick = () => {
   messageBox.style.display = "none";
   restartInterval();
 };
 
-// NO = lose
 noBtn.onclick = () => {
   messageBox.style.display = "none";
   gameOver();
@@ -256,24 +344,28 @@ restartBtn.onclick = () => {
 startBtn.onclick = () => {
   startScreen.style.display = "none";
   canvas.style.display = "block";
-  controls.style.display = "grid";
+  controls.style.display = "block";
   restartBtn.style.display = "inline-block";
   scoreText.style.display = "block";
+
+  resizeCanvas();
   resetGame();
 };
 
-function resetGame(){
+function resetGame() {
   clearInterval(game);
   score = 0;
   scoreDisplay.textContent = score;
-  snake = [{x:200,y:200}];
+  snake = [{
+    x: box * 10,
+    y: box * 10
+  }];
   direction = "RIGHT";
   food = randomFood();
   speed = 150;
   messageShown = false;
   game = setInterval(draw, speed);
 }
-
 </script>
 
 </body>
