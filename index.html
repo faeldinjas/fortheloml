@@ -27,7 +27,6 @@ canvas {
   display: none;
   width: 90vw;
   max-width: 400px;
-  aspect-ratio: 1/1;
   height: auto;
 }
 
@@ -201,8 +200,8 @@ So, will you spend this lifetime with me?
 <script>
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
-
-let box = 20;
+const box = 20;
+  
 let snake, food, direction, score, game;
 let speed;
 let messageShown;
@@ -219,9 +218,8 @@ const scoreText = document.getElementById("scoreText");
 
 function resizeCanvas() {
   const size = Math.min(window.innerWidth * 0.9, 400);
-  canvas.width = size;
-  canvas.height = size;
-  box = size / 20;
+  canvas.style.width = size + "px";
+  canvas.style.height = size + "px";
 }
 
 window.addEventListener("resize", resizeCanvas);
